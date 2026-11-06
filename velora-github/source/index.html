@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#fcfdfd">
+<title>VELORA | Live2D Artist & Rigger</title>
+<meta name="description" content="Velora is a Live2D artist and rigger. Commission a Live2D model, chibi VTuber or rigging.">
+<meta property="og:title" content="VELORA | Live2D Artist & Rigger">
+<meta property="og:description" content="Live2D models, chibi VTubers and rigging. Open for commissions.">
+<meta property="og:image" content="assets/showcase.jpg">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🦈</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#27394e; --blue:#4d6b82; --sky:#83b8d5; --pale:#dce7ed; --paper:#fcfdfd;
+  --white:#fff; --muted:#667689; --line:#dce2e6; --navy:#273c55; --mist:#aebdc7;
+  --radius:20px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:'DM Sans',system-ui,sans-serif;line-height:1.55;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit}
+:focus-visible{outline:3px solid var(--sky);outline-offset:3px}
+.wrap{width:min(1240px,92%);margin-inline:auto}
+.hidden,[hidden]{display:none!important}
+h1,h2,h3{font-family:'Manrope',sans-serif}
+
+/* ---------- header ---------- */
+.top{position:sticky;top:0;z-index:30;padding:14px 0 10px;background:rgba(252,253,253,.92);backdrop-filter:blur(14px)}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.tabs{display:flex;gap:4px;background:var(--mist);border-radius:999px;padding:6px;flex-wrap:wrap}
+.tabs a{padding:9px 16px;border-radius:999px;font-weight:600;font-size:.93rem;color:var(--navy);transition:background .2s,color .2s}
+.tabs a:hover,.tabs a.active{background:var(--navy);color:#fff}
+.brand{text-align:right;line-height:1}
+.brand strong{display:block;font:italic 800 clamp(1.6rem,3vw,2.4rem)/.95 'Manrope',sans-serif;letter-spacing:-.07em;color:var(--blue)}
+.brand span{display:block;margin-top:7px;font:800 .62rem 'Manrope',sans-serif;letter-spacing:.48em;color:var(--blue)}
+
+@keyframes float{50%{transform:translateY(-10px)}}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;justify-content:center;align-items:center;gap:8px;border:2px solid var(--navy);border-radius:999px;padding:12px 22px;background:var(--navy);color:#fff;font-weight:700;cursor:pointer;transition:background .2s,transform .2s,color .2s}
+.btn:hover{background:var(--blue);border-color:var(--blue);transform:translateY(-2px)}
+.btn.ghost{background:transparent;color:var(--navy)}
+.btn.ghost:hover{background:var(--navy);color:#fff;border-color:var(--navy)}
+
+/* ---------- sections ---------- */
+.section{padding:84px 0}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:28px}
+.section h2{font:800 clamp(2rem,4vw,3.6rem)/1 'Manrope',sans-serif;letter-spacing:-.06em;margin:0;color:var(--blue)}
+.section-head p{max-width:430px;margin:0;color:var(--muted)}
+
+/* ---------- profile ---------- */
+.profile{display:grid;grid-template-columns:auto 1fr auto;gap:28px;align-items:center;background:var(--white);border:1px solid var(--line);border-radius:28px;padding:clamp(20px,3.5vw,36px)}
+.avatar{width:clamp(110px,14vw,160px);aspect-ratio:1;border-radius:50%;object-fit:cover;border:5px solid var(--white);box-shadow:0 0 0 3px var(--sky)}
+.profile h2{font-size:clamp(1.8rem,3vw,2.4rem);font-style:italic;margin:0}
+.handle{margin:0 0 10px;color:var(--blue);font-weight:600}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.badge{font-size:.8rem;font-weight:600;padding:3px 12px;border-radius:999px;background:var(--pale);color:var(--blue)}
+.badge.open{background:var(--navy);color:#fff}
+.badge.open::before{content:"";display:inline-block;width:8px;height:8px;border-radius:50%;background:#6fe3a5;margin-right:7px;animation:pulse 2s infinite}
+@keyframes pulse{50%{opacity:.35}}
+.profile p.bio{margin:0;max-width:62ch;color:var(--muted)}
+.profile .links{display:grid;gap:10px}
+
+/* ---------- service cards ---------- */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(224px,1fr));gap:18px}
+.card{text-align:left;color:inherit;cursor:pointer;padding:0;background:var(--white);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:transform .25s,box-shadow .25s,border-color .25s}
+.card:hover{transform:translateY(-6px);box-shadow:0 20px 40px rgba(46,74,91,.12);border-color:var(--sky)}
+.thumb{aspect-ratio:4/3;background:linear-gradient(135deg,#e8eef1,#d2e0e8);display:grid;place-items:center;overflow:hidden;color:var(--blue)}
+.thumb{position:relative}.thumb img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .5s}
+.thumb img.contain{object-fit:contain;object-position:center bottom;mix-blend-mode:multiply}
+.card:hover .thumb img{transform:scale(1.05)}
+.thumb span{font:italic 800 1.8rem 'Manrope',sans-serif}
+.card .body{padding:16px 18px 20px;display:flex;flex-direction:column;gap:6px;flex:1}
+.card h3{margin:0;font-size:1.08rem;color:var(--blue);line-height:1.25}
+.card p{margin:0;font-size:.88rem;color:var(--muted)}
+.price{margin-top:auto;padding-top:8px;font-weight:800;color:var(--navy)}
+.price small{font-weight:500;color:var(--muted)}
+.note{font-size:.85rem;color:var(--muted);margin:16px 0 0}
+
+/* ---------- portfolio ---------- */
+.band{background:#e9eff2;border-block:1px solid #d6e0e5}
+.filters{display:flex;gap:4px;background:var(--mist);border-radius:999px;padding:6px;flex-wrap:wrap;width:fit-content;margin-bottom:24px}
+.filters button{border:0;background:none;color:var(--navy);padding:9px 16px;border-radius:999px;cursor:pointer;font-weight:600;transition:.2s}
+.filters button:hover,.filters button[aria-pressed="true"]{background:var(--navy);color:#fff}
+.gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.work{background:#fff;border:1px solid var(--line);border-radius:18px;overflow:hidden;padding:0;text-align:left;cursor:zoom-in;transition:transform .25s,box-shadow .25s;color:inherit}
+.work:hover{transform:translateY(-6px);box-shadow:0 20px 40px rgba(46,74,91,.12)}
+.work-art{height:240px;background:linear-gradient(135deg,#e8eef1,#d2e0e8);overflow:hidden}
+.work-art img{width:100%;height:100%;object-fit:cover;object-position:top;transition:transform .5s}
+.work-art img.contain{object-fit:contain;object-position:center bottom;mix-blend-mode:multiply}
+.work:hover img{transform:scale(1.04)}
+.work-body{padding:16px 18px}
+.work-body small{font-weight:700;color:var(--sky)}
+.work-body h3{margin:4px 0;font-size:1.2rem;color:var(--blue)}
+.work-body p{margin:0;color:var(--muted);font-size:.9rem}
+
+/* ---------- process / quote ---------- */
+.process{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.step{border-top:3px solid var(--sky);padding-top:16px}
+.step b{font:800 .8rem 'Manrope',sans-serif;color:var(--sky);letter-spacing:.1em}
+.step h3{margin:10px 0 4px;font-size:1.2rem;color:var(--blue)}
+.step p{margin:0;font-size:.92rem;color:var(--muted)}
+.quote{background:var(--navy);color:#fff;padding:clamp(28px,5vw,60px);border-radius:24px;position:relative;overflow:hidden}
+.quote::after{content:"+";position:absolute;right:6%;bottom:-65px;font:800 13rem 'Manrope',sans-serif;color:rgba(255,255,255,.07)}
+.quote p{font:700 clamp(1.6rem,3.2vw,3rem)/1.2 'Manrope',sans-serif;letter-spacing:-.05em;max-width:850px;margin:0}
+.quote em{font-style:normal;color:#8dc4e1}
+
+/* ---------- FAQ ---------- */
+.faq{display:grid;grid-template-columns:.8fr 1.2fr;gap:48px;align-items:start}
+.faq-side p{color:var(--muted);margin:14px 0 20px}
+.search{width:100%;border:1px solid var(--line);border-radius:999px;padding:12px 18px;background:var(--white);color:var(--ink)}
+.search:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(131,184,213,.45)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 0}
+.chips button{border:1px solid var(--line);background:var(--white);color:var(--blue);padding:6px 14px;border-radius:999px;cursor:pointer;font-weight:600;font-size:.88rem}
+.chips button[aria-pressed="true"]{background:var(--navy);color:#fff;border-color:var(--navy)}
+.faq details{border-bottom:1px solid var(--line);padding:4px 0}
+.faq summary{display:flex;justify-content:space-between;gap:16px;align-items:center;font-weight:700;cursor:pointer;color:var(--blue);padding:14px 0;list-style:none}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";font:800 1.5rem/1 'Manrope',sans-serif;color:var(--sky);transition:transform .25s}
+.faq details[open] summary::after{transform:rotate(45deg)}
+.faq details p{margin:0 0 16px;color:var(--muted);max-width:62ch}
+.faq-empty{color:var(--muted);padding:18px 0}
+.faq-empty a{color:var(--blue);font-weight:700;text-decoration:underline}
+
+/* ---------- CTA / footer ---------- */
+.cta{display:flex;justify-content:space-between;align-items:center;gap:24px;background:#e7eef2;border-radius:24px;padding:clamp(24px,5vw,54px)}
+.cta h2{font:800 clamp(1.9rem,4vw,3.4rem)/1 'Manrope',sans-serif;letter-spacing:-.06em;color:var(--blue);margin:0 0 8px}
+.cta p{margin:0;color:var(--muted)}
+.footer{border-top:1px solid var(--line);padding:26px 0;color:var(--muted);font-size:.86rem}
+.foot{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap;align-items:center}
+.toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);opacity:0;background:var(--navy);color:#fff;padding:12px 20px;border-radius:999px;z-index:99;transition:.25s;pointer-events:none;max-width:90vw;text-align:center}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .6s,transform .6s}
+.reveal.visible{opacity:1;transform:none}
+
+/* ---------- dialogs ---------- */
+dialog{border:0;padding:0;color:var(--ink);background:var(--paper)}
+dialog::backdrop{background:rgba(39,57,78,.6);backdrop-filter:blur(3px)}
+#dlg{margin:0 0 0 auto;height:100dvh;max-height:100dvh;width:min(580px,100%);max-width:100%;box-shadow:-12px 0 40px rgba(39,57,78,.3)}
+#dlg[open]{animation:slide .22s ease-out}
+@keyframes slide{from{transform:translateX(24px);opacity:0}to{transform:none;opacity:1}}
+.dhead{position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:var(--navy);color:#fff}
+.dhead h2{margin:0;font:italic 800 1.35rem 'Manrope',sans-serif;letter-spacing:-.03em}
+.dhead button{background:rgba(255,255,255,.14);border:0;color:#fff;width:38px;height:38px;border-radius:12px;cursor:pointer;font-size:1.1rem}
+.dhead button:hover{background:rgba(255,255,255,.28)}
+.dbody{padding:20px 20px 32px;display:grid;gap:22px}
+fieldset{border:0;margin:0;padding:0;min-width:0}
+legend,.lbl{font-weight:700;padding:0;margin-bottom:8px;display:block}
+.req{color:#c0392b;font-weight:700}
+.err{color:#c0392b;font-size:.85rem;font-weight:600;margin:6px 0 0}
+[aria-invalid=true]{border-color:#c0392b!important}
+#form [id]{scroll-margin-top:96px}
+.addon{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:10px 14px;border:2px solid var(--line);border-radius:14px;background:var(--white);transition:border-color .15s,background .15s}
+.addon.has{border-color:var(--navy);background:#e8eff3}
+.addon b{font-weight:600;display:block;line-height:1.25}
+.addon small{color:var(--blue);font-weight:700}
+.qty{display:flex;align-items:center;gap:6px}
+.qty button{width:36px;height:36px;border-radius:50%;border:2px solid var(--navy);background:#fff;color:var(--navy);font-size:1.2rem;line-height:1;cursor:pointer;font-weight:700}
+.qty button:hover:not(:disabled){background:var(--navy);color:#fff}
+.qty button:disabled{opacity:.35;cursor:not-allowed}
+.qty output{min-width:28px;text-align:center;font-weight:800;font-size:1.05rem}
+.steps{display:grid;gap:12px;counter-reset:s}
+.steps li{list-style:none;counter-increment:s;display:grid;grid-template-columns:32px 1fr;gap:12px;align-items:start}
+.steps li::before{content:counter(s);width:32px;height:32px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-weight:800}
+.steps ul,.steps ol{margin:0;padding:0}
+.paybox{background:#fff;border:2px solid var(--navy);border-radius:16px;padding:16px 18px;display:grid;gap:6px}
+.paybox .amt{font:800 1.8rem 'Manrope',sans-serif;color:var(--navy)}
+.hint{font-weight:400;color:var(--muted);font-size:.85rem}
+.opts{display:grid;gap:8px}
+.opts.row{grid-template-columns:repeat(auto-fit,minmax(120px,1fr))}
+.opt{position:relative;display:block}
+.opt input{position:absolute;opacity:0;inset:0;cursor:pointer;margin:0}
+.opt span{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:12px 14px;border:2px solid var(--line);border-radius:14px;background:var(--white);font-size:.95rem;transition:border-color .15s,background .15s}
+.opt em{font-style:normal;font-weight:700;color:var(--blue);white-space:nowrap}
+.opt:hover span{border-color:var(--sky)}
+.opt input:checked + span{border-color:var(--navy);background:#e8eff3}
+.opt input:focus-visible + span{outline:3px solid var(--sky);outline-offset:2px}
+input[type=text],textarea{width:100%;padding:12px 14px;border:2px solid var(--line);border-radius:14px;background:var(--white);color:var(--ink)}
+input[type=text]:focus,textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(131,184,213,.45)}
+textarea{min-height:110px;resize:vertical}
+.estimate{background:var(--navy);color:#fff;border-radius:16px;padding:16px 18px}
+.estimate .row{display:flex;justify-content:space-between;gap:12px;font-size:.88rem;color:#c3d4e2;padding:3px 0}
+.estimate .tot{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid rgba(255,255,255,.2);margin-top:10px;padding-top:10px}
+.estimate strong{font:800 1.9rem 'Manrope',sans-serif}
+.actions{display:flex;flex-wrap:wrap;gap:10px}
+.actions .btn{flex:1 1 auto}
+#summaryText{min-height:280px;font-size:.9rem}
+
+/* lightbox */
+#lb{margin:auto;width:min(960px,94vw);max-height:92vh;border-radius:20px;overflow:hidden;background:#fff}
+#lb figure{margin:0}
+#lb img,#lb video{display:block;width:100%;max-height:70vh;object-fit:contain;background:#eef2f4}
+#lb iframe{display:block;width:100%;aspect-ratio:16/9;border:0;background:#000}
+.work-art{position:relative}
+.play{position:absolute;right:12px;bottom:12px;width:44px;height:44px;border-radius:50%;background:rgba(39,57,78,.85);color:#fff;display:grid;place-items:center;font-size:1rem;padding-left:3px;transition:transform .2s}
+.work:hover .play{transform:scale(1.12)}
+.work-art img.sheet{object-position:center}
+#lb figcaption{padding:14px 20px}
+#lb figcaption b{font:800 1.2rem 'Manrope',sans-serif;color:var(--blue);display:block}
+#lb figcaption span{color:var(--muted);font-size:.92rem}
+.lb-bar{display:flex;justify-content:space-between;padding:0 14px 14px}
+.lb-bar button{border:0;background:var(--pale);color:var(--navy);padding:9px 18px;border-radius:999px;cursor:pointer;font-weight:700}
+.lb-bar button:hover{background:var(--navy);color:#fff}
+
+/* ---------- responsive ---------- */
+@media(max-width:900px){
+  .gallery{grid-template-columns:repeat(2,1fr)}
+  .process{grid-template-columns:1fr 1fr}
+  .faq{grid-template-columns:1fr;gap:24px}
+  .profile{grid-template-columns:auto 1fr}
+  .profile .links{grid-column:1/-1;grid-template-columns:repeat(auto-fit,minmax(140px,1fr))}
+}
+@media(max-width:620px){
+  .top{position:relative}
+  .nav{flex-direction:column;align-items:stretch}
+  .tabs{justify-content:center}.tabs a{padding:8px 11px;font-size:.82rem}
+  .brand{text-align:right;order:-1}
+  .section{padding:60px 0}
+  .section-head{display:block}.section-head p{margin-top:12px}
+  .gallery{gap:10px}.work-art{height:150px}.work-body{padding:12px}.work-body h3{font-size:.95rem}.work-body p{display:none}
+  .cta{display:block}.cta .btn{margin-top:18px}
+  .profile{grid-template-columns:1fr;text-align:left}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap nav">
+    <nav class="tabs" aria-label="Page sections">
+      <a href="#home" class="active">Profile</a>
+      <a href="#services">Services</a>
+      <a href="#portfolio">Portfolio</a>
+      <a href="#process">Process</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <a class="brand" href="#home" aria-label="Velora home"><strong>VELORA</strong><span>VTUBER SHOWCASE</span></a>
+  </div>
+</header>
+
+<main>
+  <!-- ======== PROFILE ======== -->
+  <section class="wrap" id="home" aria-label="Profile" style="padding-top:24px">
+    <div class="profile reveal">
+      <img class="avatar" src="assets/avatar.jpg" alt="Velora profile picture">
+      <div>
+        <h2>Velora</h2>
+        <p class="handle">@Velorarigg</p>
+        <div class="badges">
+          <span class="badge open">Commissions open</span>
+          <span class="badge">Live2D artist</span>
+          <span class="badge">Rigger</span>
+          <span class="badge">Shark in human form</span>
+        </div>
+        <p class="bio">Hi, I'm Velo. I draw and rig VTuber models from first sketch to final movement. I'm a shark, so I don't do small talk, but I will make sure your model moves exactly the way you pictured it. 💙✨🌊</p>
+      </div>
+      <div class="links">
+        <a class="btn" href="#services">Commission me</a>
+        <a class="btn ghost" id="xLink" href="https://x.com/Velorarigg" target="_blank" rel="noopener">X / Twitter</a>
+        <a class="btn ghost" id="kofiLink" href="https://ko-fi.com/velorarigg" target="_blank" rel="noopener">Ko-fi</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======== SERVICES ======== -->
+  <section class="section wrap" id="services">
+    <div class="section-head reveal">
+      <h2>Pick a service.</h2>
+      <p>Click a service to open the commission form. Prices are in USD.</p>
+    </div>
+    <div class="grid" id="serviceGrid"></div>
+  </section>
+
+  <!-- ======== PORTFOLIO ======== -->
+  <section class="band section" id="portfolio">
+    <div class="wrap">
+      <div class="section-head reveal">
+        <h2>A little look at my world.</h2>
+        <p>From the first sketch to the tiniest physics detail. Click any piece to see it bigger.</p>
+      </div>
+      <div class="filters" role="group" aria-label="Filter works" id="filters">
+        <button type="button" data-filter="all" aria-pressed="true">All</button>
+        <button type="button" data-filter="art" aria-pressed="false">Model Art Only</button>
+        <button type="button" data-filter="modelrig" aria-pressed="false">Model + Rigging</button>
+        <button type="button" data-filter="rigging" aria-pressed="false">Rigging</button>
+        <button type="button" data-filter="chibi" aria-pressed="false">Chibi</button>
+      </div>
+      <div class="gallery" id="gallery"></div>
+    </div>
+  </section>
+
+  <!-- ======== PROCESS ======== -->
+  <section class="section wrap" id="process">
+    <div class="section-head reveal">
+      <h2>From idea to motion.</h2>
+      <p>Clear steps and friendly updates, so you always know what happens next.</p>
+    </div>
+    <div class="process">
+      <div class="step reveal"><b>STEP 01</b><h3>Share your vision</h3><p>Pick a service, fill in the form and send me your references and must-have details.</p></div>
+      <div class="step reveal"><b>STEP 02</b><h3>Plan it together</h3><p>We confirm scope, queue, final price and payment terms before any work starts.</p></div>
+      <div class="step reveal"><b>STEP 03</b><h3>Make it move</h3><p>I work through the agreed steps and refine the details with care.</p></div>
+      <div class="step reveal"><b>STEP 04</b><h3>Meet your model</h3><p>After final checks, your files are ready for delivery.</p></div>
+    </div>
+  </section>
+
+  <section class="wrap" style="padding-bottom:84px">
+    <div class="quote reveal"><p>“Your character already has a story.<br>I'm just here to help them <em>move, feel, and shine.</em>”</p></div>
+  </section>
+
+  <!-- ======== FAQ ======== -->
+  <section class="wrap" id="faq" style="padding-bottom:84px">
+    <div class="faq">
+      <div class="faq-side reveal">
+        <h2 style="font:800 clamp(2rem,4vw,3.4rem)/1 'Manrope',sans-serif;letter-spacing:-.06em;color:var(--blue);margin:0">A few little questions.</h2>
+        <p>Not sure about something? Search below or just ask me. No pressure, promise.</p>
+        <label class="sr" for="faqSearch" style="position:absolute;left:-9999px">Search the FAQ</label>
+        <input class="search" id="faqSearch" type="search" placeholder="Search questions..." autocomplete="off">
+        <div class="chips" id="faqChips" role="group" aria-label="FAQ topics">
+          <button type="button" data-cat="all" aria-pressed="true">All</button>
+          <button type="button" data-cat="pricing" aria-pressed="false">Pricing</button>
+          <button type="button" data-cat="process" aria-pressed="false">Process</button>
+          <button type="button" data-cat="usage" aria-pressed="false">Usage</button>
+        </div>
+      </div>
+      <div id="faqList">
+        <details name="faq" data-cat="pricing" open>
+          <summary>Are these prices final?</summary>
+          <p>The price you see is the starting price for the style you pick. Usage, add-ons and extra details are added on top, and the form shows a live estimate. Custom requests have no fixed price, so I'll send you a quote. The final price is always confirmed with you before work starts.</p>
+        </details>
+        <details name="faq" data-cat="process">
+          <summary>How do I commission you?</summary>
+          <p>Click a service, fill in the form and press “Review and send”. Then continue to Ko-fi: your request is copied for you, so paste it into the Ko-fi message. I'll confirm availability, queue and the final price with you.</p>
+        </details>
+        <details name="faq" data-cat="pricing">
+          <summary>What's the difference between halfbody, fullbody and chibi?</summary>
+          <p>Halfbody covers the upper body, fullbody covers the whole character from head to toe, and chibi is a small, cute, stylized version. Each style has its own price. Not sure which one fits? Tell me how you plan to stream and I'll help you pick.</p>
+        </details>
+        <details name="faq" data-cat="usage">
+          <summary>What does each usage option mean?</summary>
+          <p>Personal is for your own use. Commercial: content covers streaming and content creation. Both are included in the price. Commercial: merchandising is for selling items that use the art and adds $200. If you're unsure which one applies, ask me before you order.</p>
+        </details>
+        <details name="faq" data-cat="pricing">
+          <summary>What do the add-ons include?</summary>
+          <p>VBridger is +$300, Outfit is +$150, Toggle is +$30, Expression is +$20 and Hairstyle is +$50. Outfit, Toggle, Expression and Hairstyle can be ordered in any quantity. Use the + and − buttons in the form and the estimate updates right away. We'll confirm the exact features of each add-on when we plan your project.</p>
+        </details>
+        <details name="faq" data-cat="process">
+          <summary>Can I ask for something that isn't listed?</summary>
+          <p>Yes. Choose Custom Request and describe your idea. There's no fixed price for custom requests, so I'll review your idea and send you a quote.</p>
+        </details>
+        <details name="faq" data-cat="process">
+          <summary>I have a deadline. Can you make it?</summary>
+          <p>Tell me in the “hard deadline” field of the form. I'll check my queue and let you know honestly whether it's possible, before you commit to anything.</p>
+        </details>
+        <details name="faq" data-cat="process">
+          <summary>Can I split the payment?</summary>
+          <p>Payments go through Ko-fi. Payment terms, including whether the payment can be split, are discussed and confirmed with me before work starts. Custom requests are paid only after I've sent you a quote.</p>
+        </details>
+        <details name="faq" data-cat="usage">
+          <summary>May you share my commission publicly?</summary>
+          <p>The form asks whether I may stream my work on your model or share it with credit. Answer Yes, No or Ask me first, and I'll follow it.</p>
+        </details>
+        <details name="faq" data-cat="process">
+          <summary>What should I send as a character reference?</summary>
+          <p>A link to images of your character is perfect (Google Drive, Imgur, Pinterest and similar). Clear front views, outfit details and any pose or expression ideas help me the most.</p>
+        </details>
+        <p class="faq-empty" id="faqEmpty" hidden>No question matches that. <a href="https://x.com/Velorarigg" target="_blank" rel="noopener">Ask me on X</a> and I'll answer.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap" style="padding-bottom:84px">
+    <div class="cta reveal">
+      <div>
+        <h2>Let's bring them to life.</h2>
+        <p>Got a character waiting? Tell me what you're dreaming of. 💙✨🌊</p>
+      </div>
+      <a class="btn" href="#services">Start a commission</a>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="wrap foot">
+    <b style="font:italic 800 1.4rem 'Manrope',sans-serif;color:var(--blue)">VELORA</b>
+    <span>Live2D Artist &amp; Rigger · © <span id="year"></span> · Made with 💙✨🌊</span>
+    <a id="xLink2" href="https://x.com/Velorarigg" target="_blank" rel="noopener">X / Twitter ↗</a>
+  </div>
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- ============ LIGHTBOX ============ -->
+<dialog id="lb" aria-label="Artwork preview">
+  <figure>
+    <div id="lbMedia"></div>
+    <figcaption><b id="lbTitle"></b><span id="lbDesc"></span></figcaption>
+  </figure>
+  <div class="lb-bar">
+    <button type="button" id="lbPrev">← Prev</button>
+    <button type="button" id="lbClose">Close</button>
+    <button type="button" id="lbNext">Next →</button>
+  </div>
+</dialog>
+
+<!-- ============ COMMISSION FORM ============ -->
+<dialog id="dlg" aria-labelledby="dlgTitle">
+  <div class="dhead">
+    <h2 id="dlgTitle">Build your commission</h2>
+    <button type="button" id="closeBtn" aria-label="Close form">✕</button>
+  </div>
+
+  <form id="form" class="dbody" autocomplete="off" novalidate>
+    <p class="note" style="margin:0"><span class="req">*</span> Required fields</p>
+    <fieldset>
+      <legend>Service</legend>
+      <div class="opts" id="serviceOpts"></div>
+    </fieldset>
+
+    <fieldset id="styleSet">
+      <legend>Model style</legend>
+      <div class="opts" id="styleOpts"></div>
+    </fieldset>
+
+    <div>
+      <label class="lbl" for="name">Your name <span class="req" aria-hidden="true">*</span></label>
+      <input type="text" id="name" name="name" required aria-required="true">
+    </div>
+
+    <div>
+      <label class="lbl" for="contactField">Where can I contact you? <span class="req" aria-hidden="true">*</span> <span class="hint">Discord, X, email...</span></label>
+      <input type="text" id="contactField" name="contact" required>
+    </div>
+
+    <fieldset>
+      <legend>How will you be using this commission?</legend>
+      <div class="opts" id="usageOpts"></div>
+    </fieldset>
+
+    <div id="detailsBlock">
+      <label class="lbl" for="details">Tell me your details <span class="hint">pose, expressions, toggles</span></label>
+      <textarea id="details" name="details" placeholder="Describe your character, pose, expressions and any toggles you want."></textarea>
+    </div>
+
+    <div id="ideaBlock" hidden>
+      <label class="lbl" for="idea">Your idea description</label>
+      <textarea id="idea" name="idea" placeholder="Tell me what you have in mind. I'll reply with a quote."></textarea>
+    </div>
+
+    <div>
+      <label class="lbl" for="ref">Character reference <span class="req" aria-hidden="true">*</span> <span class="hint">link to images (Google Drive, Imgur, Pinterest...)</span></label>
+      <input type="text" id="ref" name="ref" placeholder="https://" required>
+    </div>
+
+    <fieldset id="addonSet">
+      <legend>Add-ons</legend>
+      <div class="opts" id="addonOpts"></div>
+    </fieldset>
+
+    <div>
+      <label class="lbl" for="deadline">Do you have any hard deadline?</label>
+      <input type="text" id="deadline" name="deadline" placeholder="Date and reason, or &quot;No&quot;">
+    </div>
+
+    <fieldset>
+      <legend>May I publicly stream or work with credit?</legend>
+      <div class="opts row" id="creditOpts"></div>
+    </fieldset>
+
+    <div class="estimate" id="estimate" aria-live="polite">
+      <div id="lineItems"></div>
+      <div class="tot"><span>Estimated total</span><strong id="totalVal">$0</strong></div>
+    </div>
+    <p class="note" id="totalNote" style="margin:-10px 0 0">The final price is confirmed with you before any work starts.</p>
+
+    <button class="btn" type="submit">Review and send</button>
+  </form>
+
+  <div id="result" class="dbody" hidden>
+    <ol class="steps">
+      <li>
+        <div>
+          <b id="stepTitle1">Check your request</b>
+          <textarea id="summaryText" readonly aria-label="Your commission request" style="margin-top:8px"></textarea>
+        </div>
+      </li>
+      <li>
+        <div>
+          <b id="payTitle">Pay on Ko-fi</b>
+          <div class="paybox" style="margin-top:8px">
+            <span id="payLabel" class="hint">Estimated total</span>
+            <span class="amt" id="payAmt">$0</span>
+            <p class="note" id="payNote" style="margin:0">Tapping the button copies your request and opens Ko-fi. Paste your request in the message box there.</p>
+          </div>
+          <div class="actions" style="margin-top:12px">
+            <a class="btn" id="payBtn" target="_blank" rel="noopener" href="#">Continue to Ko-fi</a>
+            <button class="btn ghost" type="button" id="copyBtn">Copy request</button>
+          </div>
+        </div>
+      </li>
+      <li>
+        <div>
+          <b>Questions? Say hi</b>
+          <p class="note" style="margin:4px 0 0">I'll confirm the queue and the final price with you. You can also reach me on <a id="sendX" target="_blank" rel="noopener" href="#" style="text-decoration:underline">X</a><span id="mailWrap" hidden> or by <a id="sendMail" href="#" style="text-decoration:underline">email</a></span>.</p>
+        </div>
+      </li>
+    </ol>
+    <button class="btn ghost" type="button" id="backBtn">Back to form</button>
+  </div>
+</dialog>
+
+<script>
+/* =====================================================
+   EDIT HERE: prices, links, gallery and options
+   Chibi prices below are PLACEHOLDERS. Replace with the real ones.
+   ===================================================== */
+const CONFIG = {
+  xUrl:    "https://x.com/Velorarigg",
+  kofiUrl: "https://ko-fi.com/velorarigg",
+  kofiPayUrl: "https://ko-fi.com/velorarigg",   // where the "Pay on Ko-fi" button goes (use your Ko-fi commission or shop page link)
+  email:   "",            // optional: "you@example.com" shows a "Send email" button
+  currency:"$"
+};
+
+const STYLES = { halfbody:"Halfbody", fullbody:"Fullbody", chibi:"Chibi" };
+
+const SERVICES = {
+  model:   { label:"Live2D Model",           prices:{ halfbody:200, fullbody:300, chibi:150 } },
+  rigging: { label:"Live2D Rigging",         prices:{ halfbody:220, fullbody:300, chibi:200 } },
+  both:    { label:"Live2D Model + Rigging", prices:{ halfbody:450, fullbody:600, chibi:320 } },
+  custom:  { label:"Custom Request",         custom:true }
+};
+
+const CARDS = [
+  { id:"model",   service:"model",   style:"halfbody", title:"Live2D Model (art only)", desc:"Layered, rig-ready model art. Halfbody, fullbody or chibi.", thumb:"assets/fullbody.jpg", contain:true },
+  { id:"chibi",   service:"both",    style:"chibi",    title:"Chibi VTuber",            desc:"A cute chibi model, drawn and rigged and ready to stream.", thumb:"assets/chibi.jpg", contain:true },
+  { id:"rigging", service:"rigging", style:"halfbody", title:"Live2D Rigging",          desc:"Bring your own art. I rig it with smooth, expressive movement.", thumb:"assets/avatar.jpg" },
+  { id:"both",    service:"both",    style:"halfbody", title:"Live2D Model + Rigging",  desc:"The full package: model art and rigging from one artist.", thumb:"assets/showcase.jpg" },
+  { id:"custom",  service:"custom",  style:null,       title:"Custom Request",          desc:"Something different? Describe it and I'll send you a quote.", tile:"Your idea 🌊" }
+];
+
+const USAGE = [
+  { id:"personal", label:"Personal",                  price:0,   tag:"included" },
+  { id:"content",  label:"Commercial: content",       price:0,   tag:"included" },
+  { id:"merch",    label:"Commercial: merchandising", price:200, tag:"+$200" }
+];
+
+// multi:true = the customer can choose how many (0 to max). Expression price is a PLACEHOLDER.
+const ADDONS = [
+  { id:"vbridger",   label:"VBridger",   price:300 },
+  { id:"outfit",     label:"Outfit",     price:150, multi:true, max:10 },
+  { id:"toggle",     label:"Toggle",     price:30,  multi:true, max:20 },
+  { id:"expression", label:"Expression", price:20,  multi:true, max:20 },
+  { id:"hair",       label:"Hairstyle",  price:50,  multi:true, max:10 }
+];
+
+/* Portfolio items. For a VIDEO, add one of these to the item:
+     video:"assets/rigging-demo.mp4"   (a file you upload; keep it small, GitHub web upload limit is 25 MB)
+     youtube:"VIDEO_ID"                (the part after v= in a YouTube link; best for long or big videos)
+   "img" is the thumbnail (optional for YouTube). "cats" can hold several of: art, modelrig, rigging, chibi. Example:
+   { cats:["rigging"], tag:"Rigging · Demo", title:"Face tracking test", desc:"Live tracking demo.", img:"assets/rigging-thumb.jpg", video:"assets/rigging-demo.mp4" },
+*/
+const WORKS = [
+  { cats:["art","modelrig"], tag:"Live2D · Model showcase", title:"Velora",          desc:"Full showcase sheet: full body, close-ups and design details.", img:"assets/showcase.jpg", sheet:true },
+  { cats:["art","modelrig"], tag:"Live2D · Model showcase", title:"Airu Routare",    desc:"Pirate captain model with a tricorn hat, layered cape and sword.", img:"assets/work-airu.jpg", sheet:true },
+  { cats:["art","modelrig"], tag:"Live2D · Model showcase", title:"Gearsy",          desc:"Horned, mummy-wrapped character with floating spirit orbs.", img:"assets/work-gearsy.jpg", sheet:true },
+  { cats:["art","modelrig"], tag:"Live2D · Model showcase", title:"AkaiPupVT",       desc:"Pup-eared character in a bloody bone-and-paw hoodie.", img:"assets/work-akaipupvt.jpg", sheet:true },
+  { cats:["art","modelrig"], tag:"Live2D · Model showcase", title:"Buffpup",         desc:"Fox-eared character with wrapped bandages and clawed gloves.", img:"assets/work-buffpup.jpg", sheet:true },
+  { cats:["art"],            tag:"Live2D · Full body",      title:"Velora, full body", desc:"A full-body model designed for smooth, expressive performance.", img:"assets/fullbody.jpg", contain:true },
+  { cats:["rigging"],        tag:"Rigging · Detail",        title:"Every little expression", desc:"Eye movement, face tracking and expressive details.", img:"assets/detail-eyes.jpg" },
+  { cats:["chibi"],          tag:"Chibi · Character art",   title:"Small size, big personality", desc:"A playful chibi take with the same care for movement.", img:"assets/chibi.jpg", contain:true }
+];
+
+/* ===================== code ===================== */
+const $ = (s, r=document) => r.querySelector(s);
+const $$ = (s, r=document) => [...r.querySelectorAll(s)];
+const money = n => CONFIG.currency + Math.round(n).toLocaleString("en-US");
+const state = { service:"model", style:"halfbody" };
+
+$("#year").textContent = new Date().getFullYear();
+["#xLink","#xLink2","#sendX"].forEach(s => $(s).href = CONFIG.xUrl);
+$("#payBtn").href = CONFIG.kofiPayUrl;
+["#kofiLink"].forEach(s => $(s).href = CONFIG.kofiUrl);
+
+/* ----- toast ----- */
+let toastTimer;
+function toast(msg){
+  const t = $("#toast"); t.textContent = msg; t.classList.add("show");
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 2600);
+}
+
+/* ----- service cards ----- */
+function fromPrice(c){
+  if(c.service === "custom") return `<span class="price">Quote on request</span>`;
+  const p = SERVICES[c.service].prices;
+  const v = c.id === "chibi" ? p.chibi : Math.min(...Object.values(p));
+  return `<span class="price"><small>from </small>${money(v)}</span>`;
+}
+$("#serviceGrid").innerHTML = CARDS.map(c => `
+  <button class="card reveal" type="button" data-card="${c.id}">
+    <div class="thumb">${c.thumb ? `<img class="${c.contain?"contain":""}" src="${c.thumb}" alt="" loading="lazy">` : `<span>${c.tile}</span>`}</div>
+    <div class="body"><h3>${c.title}</h3><p>${c.desc}</p>${fromPrice(c)}</div>
+  </button>`).join("");
+
+/* ----- portfolio gallery + filter + lightbox ----- */
+const isVideo = w => !!(w.video || w.youtube);
+const thumbOf = w => w.img || (w.youtube ? `https://i.ytimg.com/vi/${w.youtube}/hqdefault.jpg` : "");
+$("#gallery").innerHTML = WORKS.map((w,i) => `
+  <button class="work reveal" type="button" data-i="${i}" data-cat="${w.cats.join(' ')}" aria-label="Open ${w.title}">
+    <div class="work-art"><img class="${w.contain?"contain":""} ${w.sheet?"sheet":""}" src="${thumbOf(w)}" alt="${w.title}" loading="lazy">${isVideo(w)?'<span class="play" aria-hidden="true">▶</span>':""}</div>
+    <div class="work-body"><small>${w.tag}</small><h3>${w.title}</h3><p>${w.desc}</p></div>
+  </button>`).join("");
+
+$("#filters").addEventListener("click", e => {
+  const b = e.target.closest("button"); if(!b) return;
+  $$("#filters button").forEach(x => x.setAttribute("aria-pressed", x === b));
+  $$(".work").forEach(w => w.classList.toggle("hidden", b.dataset.filter !== "all" && !w.dataset.cat.split(" ").includes(b.dataset.filter)));
+});
+
+const lb = $("#lb");
+let lbList = [], lbPos = 0;
+function showLb(){
+  const w = WORKS[lbList[lbPos]];
+  const box = $("#lbMedia");
+  if(w.youtube){
+    box.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${w.youtube}?rel=0" title="${w.title}" allow="accelerometer; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>`;
+  } else if(w.video){
+    box.innerHTML = `<video src="${w.video}" poster="${w.img || ""}" controls playsinline preload="metadata"></video>`;
+    const v = box.firstElementChild; v.play().catch(() => {});
+  } else {
+    box.innerHTML = `<img src="${w.img}" alt="${w.title}">`;
+  }
+  $("#lbTitle").textContent = w.title; $("#lbDesc").textContent = w.desc;
+}
+$("#gallery").addEventListener("click", e => {
+  const b = e.target.closest(".work"); if(!b) return;
+  lbList = $$(".work").filter(w => !w.classList.contains("hidden")).map(w => +w.dataset.i);
+  lbPos = lbList.indexOf(+b.dataset.i); showLb(); lb.showModal();
+});
+const step = d => { lbPos = (lbPos + d + lbList.length) % lbList.length; showLb(); };
+$("#lbPrev").addEventListener("click", () => step(-1));
+$("#lbNext").addEventListener("click", () => step(1));
+$("#lbClose").addEventListener("click", () => lb.close());
+lb.addEventListener("click", e => { if(e.target === lb) lb.close(); });
+lb.addEventListener("close", () => { $("#lbMedia").innerHTML = ""; });
+lb.addEventListener("keydown", e => { if(e.key==="ArrowLeft") step(-1); if(e.key==="ArrowRight") step(1); });
+
+/* ----- FAQ: search + topic chips ----- */
+let faqCat = "all";
+function filterFaq(){
+  const term = $("#faqSearch").value.trim().toLowerCase();
+  let shown = 0;
+  $$("#faqList details").forEach(d => {
+    const ok = (faqCat === "all" || d.dataset.cat === faqCat) && (!term || d.textContent.toLowerCase().includes(term));
+    d.hidden = !ok; if(ok) shown++;
+  });
+  $("#faqEmpty").hidden = shown > 0;
+}
+$("#faqSearch").addEventListener("input", filterFaq);
+$("#faqChips").addEventListener("click", e => {
+  const b = e.target.closest("button"); if(!b) return;
+  faqCat = b.dataset.cat;
+  $$("#faqChips button").forEach(x => x.setAttribute("aria-pressed", x === b));
+  filterFaq();
+});
+
+/* ----- nav scroll-spy ----- */
+const links = $$(".tabs a");
+const spy = new IntersectionObserver(es => es.forEach(e => {
+  if(e.isIntersecting){
+    links.forEach(a => a.classList.toggle("active", a.getAttribute("href") === "#" + e.target.id));
+  }
+}), { rootMargin:"-45% 0px -50% 0px" });
+["home","services","portfolio","process","faq"].forEach(id => spy.observe($("#"+id)));
+
+/* ----- reveal on scroll ----- */
+const rv = new IntersectionObserver(es => es.forEach(e => {
+  if(e.isIntersecting){ e.target.classList.add("visible"); rv.unobserve(e.target); }
+}), { threshold:.08 });
+$$(".reveal").forEach(el => rv.observe(el));
+
+/* ----- commission form builders ----- */
+function radios(name, items, checkedId, render){
+  return items.map(i => `
+    <label class="opt"><input type="radio" name="${name}" value="${i.id}" ${i.id===checkedId?"checked":""}>
+    <span>${render(i)}</span></label>`).join("");
+}
+$("#serviceOpts").innerHTML = radios("service",
+  Object.entries(SERVICES).map(([id,s]) => ({id, ...s})), state.service,
+  s => `<b style="font-weight:700">${s.label}</b><em>${s.custom ? "no fixed price" : ""}</em>`);
+$("#usageOpts").innerHTML = radios("usage", USAGE, "personal", u => `${u.label}<em data-tag="${u.tag}">${u.tag}</em>`);
+$("#addonOpts").innerHTML = ADDONS.map(a => a.multi ? `
+  <div class="addon" data-addon="${a.id}">
+    <div><b>${a.label}</b><small>+${money(a.price)} each</small></div>
+    <div class="qty">
+      <button type="button" data-d="-1" aria-label="Fewer ${a.label}" disabled>&minus;</button>
+      <output aria-live="polite" aria-label="${a.label} quantity">0</output>
+      <button type="button" data-d="1" aria-label="More ${a.label}">+</button>
+    </div>
+  </div>` : `
+  <label class="opt"><input type="checkbox" name="addon" value="${a.id}">
+  <span>${a.label}<em>+${money(a.price)}</em></span></label>`).join("");
+$("#creditOpts").innerHTML = radios("credit",
+  [{id:"yes",label:"Yes"},{id:"no",label:"No"},{id:"ask",label:"Ask me first"}], "yes", c => c.label);
+
+function renderStyles(){
+  const svc = SERVICES[state.service];
+  if(svc.custom) return;
+  $("#styleOpts").innerHTML = Object.entries(STYLES).map(([id,label]) => `
+    <label class="opt"><input type="radio" name="style" value="${id}" ${id===state.style?"checked":""}>
+    <span>${label}<em>${money(svc.prices[id])}</em></span></label>`).join("");
+}
+
+function selectedAddons(){
+  const out = [];
+  ADDONS.forEach(a => {
+    if(a.multi){
+      const q = +$(`.addon[data-addon="${a.id}"] output`).textContent;
+      if(q > 0) out.push({ a, qty:q });
+    } else if($(`input[name=addon][value="${a.id}"]`).checked){
+      out.push({ a, qty:1 });
+    }
+  });
+  return out;
+}
+
+function total(){
+  const svc = SERVICES[state.service];
+  if(svc.custom) return 0;
+  const rows = [[`${svc.label} (${STYLES[state.style]})`, svc.prices[state.style]]];
+  const usage = USAGE.find(u => u.id === $("input[name=usage]:checked").value);
+  if(usage.price) rows.push([usage.label, usage.price]);
+  selectedAddons().forEach(({a, qty}) => rows.push([qty > 1 ? `${a.label} × ${qty}` : a.label, a.price * qty]));
+  const t = rows.reduce((s,r) => s + r[1], 0);
+  $("#lineItems").innerHTML = rows.map(r => `<div class="row"><span>${r[0]}</span><span>${money(r[1])}</span></div>`).join("");
+  $("#totalVal").textContent = money(t);
+  return t;
+}
+
+$("#addonOpts").addEventListener("click", e => {
+  const btn = e.target.closest(".qty button"); if(!btn) return;
+  const row = btn.closest(".addon"), a = ADDONS.find(x => x.id === row.dataset.addon);
+  const out = $("output", row);
+  const q = Math.min(a.max, Math.max(0, +out.textContent + +btn.dataset.d));
+  out.textContent = q;
+  $('button[data-d="-1"]', row).disabled = q === 0;
+  $('button[data-d="1"]', row).disabled = q === a.max;
+  row.classList.toggle("has", q > 0);
+  total();
+});
+
+function apply(){
+  const custom = !!SERVICES[state.service].custom;
+  ["#styleSet","#addonSet","#estimate","#totalNote","#detailsBlock"].forEach(s => $(s).hidden = custom);
+  $("#ideaBlock").hidden = !custom;
+  $("#idea").required = custom;
+  $$("#usageOpts em").forEach(em => { em.textContent = custom ? (em.dataset.tag === "included" ? "included" : "") : em.dataset.tag; });
+  renderStyles();
+  total();
+}
+
+$("#form").addEventListener("change", e => {
+  if(e.target.name === "service"){ state.service = e.target.value; apply(); }
+  else if(e.target.name === "style"){ state.style = e.target.value; total(); }
+  else total();
+});
+
+const dlg = $("#dlg");
+function openForm(card){
+  state.service = card.service;
+  if(card.style) state.style = card.style;
+  $(`input[name=service][value=${card.service}]`).checked = true;
+  $("#form").hidden = false; $("#result").hidden = true;
+  apply(); dlg.showModal(); dlg.scrollTo(0,0);
+}
+$("#serviceGrid").addEventListener("click", e => {
+  const b = e.target.closest("[data-card]"); if(b) openForm(CARDS.find(c => c.id === b.dataset.card));
+});
+$("#closeBtn").addEventListener("click", () => dlg.close());
+dlg.addEventListener("click", e => { if(e.target === dlg) dlg.close(); });
+
+/* ----- submit -> summary ----- */
+function summary(){
+  const f = new FormData($("#form"));
+  const svc = SERVICES[state.service];
+  const usage = USAGE.find(u => u.id === f.get("usage"));
+  const credit = {yes:"Yes", no:"No", ask:"Ask me first"}[f.get("credit")];
+  const L = ["COMMISSION REQUEST", "", "Service: " + svc.label];
+  if(!svc.custom) L.push("Model style: " + STYLES[state.style]);
+  L.push("Name: " + f.get("name"), "Contact: " + f.get("contact"),
+         "Usage: " + usage.label + (svc.custom ? "" : ` (${usage.tag})`), "");
+  if(svc.custom) L.push("Idea description:", f.get("idea"));
+  else L.push("Details (pose, expressions, toggles):", f.get("details") || "-");
+  L.push("", "Character reference: " + f.get("ref"));
+  if(!svc.custom){
+    const ad = selectedAddons().map(({a, qty}) => `${a.label}${qty > 1 ? " × " + qty : ""} (+${money(a.price * qty)})`);
+    L.push("Add-ons: " + (ad.length ? ad.join(", ") : "None"));
+  }
+  L.push("Hard deadline: " + (f.get("deadline") || "None"), "Public stream / credit: " + credit);
+  if(!svc.custom) L.push("", "Estimated total: " + money(total()));
+  return L.join("\n");
+}
+const REQUIRED = [["name","Please enter your name."],["contactField","Please tell me where to contact you."],["ref","Please add a link to your character reference."],["idea","Please describe your idea."]];
+function validate(){
+  let first = null;
+  REQUIRED.forEach(([id, msg]) => {
+    const el = $("#"+id);
+    if(el.closest("[hidden]")){ return; }
+    const old = $("#"+id+"-err"); if(old) old.remove();
+    const bad = !el.value.trim();
+    el.toggleAttribute("aria-invalid", bad); if(!bad) el.removeAttribute("aria-invalid"); else el.setAttribute("aria-invalid","true");
+    if(bad){
+      const p = document.createElement("p"); p.className = "err"; p.id = id + "-err"; p.textContent = msg;
+      el.insertAdjacentElement("afterend", p); el.setAttribute("aria-describedby", p.id);
+      if(!first) first = el;
+    }
+  });
+  return first;
+}
+$("#form").addEventListener("input", e => {
+  if(e.target.hasAttribute && e.target.hasAttribute("aria-invalid") && e.target.value.trim()){
+    e.target.removeAttribute("aria-invalid");
+    const m = $("#"+e.target.id+"-err"); if(m) m.remove();
+  }
+});
+$("#form").addEventListener("submit", e => {
+  e.preventDefault();
+  const bad = validate();
+  if(bad){
+    bad.scrollIntoView({ behavior:"smooth", block:"center" });
+    bad.focus({ preventScroll:true });
+    toast("Please fill in the fields marked with *");
+    return;
+  }
+  const text = summary();
+  const custom = !!SERVICES[state.service].custom;
+  $("#summaryText").value = text;
+  if(custom){
+    $("#payTitle").textContent = "Send your idea on Ko-fi";
+    $("#payLabel").textContent = "Price";
+    $("#payAmt").textContent = "Quote first";
+    $("#payNote").textContent = "Custom requests have no fixed price. Send your idea and I'll reply with a quote before any payment.";
+    $("#payBtn").textContent = "Open Ko-fi";
+  } else {
+    $("#payTitle").textContent = "Pay on Ko-fi";
+    $("#payLabel").textContent = "Estimated total";
+    $("#payAmt").textContent = money(total());
+    $("#payNote").textContent = "Tapping the button copies your request and opens Ko-fi. Paste your request in the message box there. The final price is confirmed before work starts.";
+    $("#payBtn").textContent = "Continue to Ko-fi";
+  }
+  if(CONFIG.email){
+    $("#mailWrap").hidden = false;
+    $("#sendMail").href = `mailto:${CONFIG.email}?subject=${encodeURIComponent("Commission request: " + SERVICES[state.service].label)}&body=${encodeURIComponent(text)}`;
+  }
+  $("#form").hidden = true; $("#result").hidden = false; dlg.scrollTo(0,0);
+});
+$("#backBtn").addEventListener("click", () => { $("#result").hidden = true; $("#form").hidden = false; });
+
+async function copyRequest(){
+  const t = $("#summaryText");
+  try{ await navigator.clipboard.writeText(t.value); return true; }
+  catch{ t.select(); try{ return document.execCommand("copy"); }catch{ return false; } }
+}
+$("#copyBtn").addEventListener("click", async () => {
+  toast(await copyRequest() ? "Request copied! 💙" : "Couldn't copy. Select the text and copy it manually.");
+});
+$("#payBtn").addEventListener("click", async () => {
+  const ok = await copyRequest();   // the link still opens in a new tab
+  toast(ok ? "Request copied! Paste it in the Ko-fi message. 💙✨" : "Open Ko-fi, then paste your request. Copy it from the box first.");
+});
+
+apply();
+</script>
+</body>
+</html>
